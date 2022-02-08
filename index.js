@@ -1,35 +1,26 @@
-require('dotenv').config();
-const Web3 = require('web3');
+const { createConnection, getEtherBalance, verifyArgs } = require('./helpers/connection');
 
 // Initiate new connection
-const newWeb3Connection = new Web3(process.env.rpcURL)
+const newWeb3Connection = createConnection();
 
-let args, burningAddress;
+const address = verifyArgs(newWeb3Connection);
 
-if (process.argv.length > 2) {
-  args = process.argv[2];
-  const isValid = newWeb3Connection.utils.isAddress(args);
-  if (!isValid) {
-    console.log("Invalid address: ", args);
-    console.log("Ensure wallet address is valid")
-    return;
-  } 
-}
-
-if (!args) {
-  // Address that Eth users use for burning tokens
-  burningAddress = '0x000000000000000000000000000000000000dead';
+if (!address) {
+  console.log("Invalid address");
+  console.log("Ensure wallet address is valid");
+  return;
 }
 
 
 // Check account balance
-newWeb3Connection.eth.getBalance(args ? args : burningAddress, (err, wei) => {
-  // Second arg is the smallest denomination of ether
-  if (err) {
-    console.log("HERE")
-    console.log("ERROR in getBalance: ", err)
-  }
-  // Convert wei to Ether with fromWei
-  balance = newWeb3Connection.utils.fromWei(wei, 'ether');
-  console.log(`Address: ${args || burningAddress} has a balance of ${balance} Ether`);
-});
+getEtherBalance(address, newWeb3Connection)
+  .then(result => {
+    console.log(`Address: ${address} has a balance of ${result} Ether`);
+  })
+  .catch(err => {
+    console.log("Error getting Ether Balance for supplied address: ", address);
+    console.log("Error: ", err);
+    return;
+  });
+
+
