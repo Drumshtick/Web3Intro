@@ -3,6 +3,7 @@ const { createConnection, getEtherBalance, verifyArgs } = require('./helpers/con
 // Initiate new connection
 const newWeb3Connection = createConnection();
 
+//Get wallet address to be searched
 const address = verifyArgs(newWeb3Connection);
 
 if (!address) {
@@ -20,7 +21,6 @@ getEtherBalance(address, newWeb3Connection)
   .catch(err => {
     console.log("Error getting Ether Balance for supplied address: ", address);
     console.log("Error: ", err);
-    return;
   });
 
 
