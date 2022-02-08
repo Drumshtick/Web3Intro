@@ -40,5 +40,5 @@ const getEtherBalance = (address, newWeb3Connection) => {
 };
 
 module.exports = {
-  createConnection, Web3, verifyArgs, getEtherBalance
+  createConnection, verifyArgs, getEtherBalance
 };
